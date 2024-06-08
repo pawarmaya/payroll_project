@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Salary Slip</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Salary Slip</h2>
+        <table>
+            <tr>
+                <th>Employee No:</th>
+                <td>{{ selected_emp.emp_no }}</td>
+            </tr>
+            <tr>
+                <th>Month:</th>
+                <td>{{ selected_month }}</td>
+            </tr>
+            <tr>
+                <th>Basic Pay:</th>
+                <td>{{ selected_emp.basic_pay }}</td>
+            </tr>
+            <tr>
+                <th>Days Present:</th>
+                <td>{{ attendance.days_present }}</td>
+            </tr>
+            <tr>
+                <th>Gross Pay:</th>
+                <td>{{ gross_pay }}</td>
+            </tr>
+            <tr>
+                <th>Income Tax (%):</th>
+                <td>{{ selected_emp.it_percent }}</td>
+            </tr>
+            <tr>
+                <th>Net Pay:</th>
+                <td>{{ net_pay }}</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

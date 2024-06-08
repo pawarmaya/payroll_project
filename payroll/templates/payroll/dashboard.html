@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payroll Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        .container {
+            padding: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .result h3 {
+            margin-bottom: 10px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .salary-slip {
+            margin-top: 20px;
+            overflow-x: auto; /* Ensure table responsiveness */
+        }
+
+        .salary-slip table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .salary-slip th, .salary-slip td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .salary-slip th {
+            background-color: #f2f2f2;
+        }
+
+        @media (max-width: 600px) {
+            .salary-slip table, .salary-slip th, .salary-slip td {
+                display: block;
+                width: 100%;
+            }
+
+            .salary-slip th {
+                display: none;
+            }
+
+            .salary-slip td {
+                border: none;
+                position: relative;
+                padding-left: 50%;
+            }
+
+            .salary-slip td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: calc(50% - 20px);
+                white-space: nowrap;
+                font-weight: bold;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Payroll Dashboard</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="emp_no">Emp No:</label>
+                <select class="form-control" id="emp_no" name="emp_no">
+                    {% for emp in employees %}
+                        <option value="{{ emp.emp_no }}">{{ emp.emp_no }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="month">Month:</label>
+                <select class="form-control" id="month" name="month">
+                    {% for month in months %}
+                        <option value="{{ month }}">{{ month }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Calculate</button>
+            <button type="submit" name="download" value="yes" class="btn btn-secondary">Download PDF</button>
+        </form>
+        {% if gross_pay and net_pay %}
+            <div class="result">
+                <h3>Results</h3>
+                <p><strong>Gross Pay:</strong> {{ gross_pay }}</p>
+                <p><strong>Net Pay:</strong> {{ net_pay }}</p>
+            </div>
+            <div class="salary-slip">
+                <h3>Salary Slip</h3>
+                <table>
+                    <tr>
+                        <th>Employee No:</th>
+                        <td data-label="Employee No:">{{ selected_emp.emp_no }}</td>
+                    </tr>
+                    <tr>
+                        <th>Month:</th>
+                        <td data-label="Month:">{{ selected_month }}</td>
+                    </tr>
+                    <tr>
+                        <th>Basic Pay:</th>
+                        <td data-label="Basic Pay:">{{ selected_emp.basic_pay }}</td>
+                    </tr>
+                    <tr>
+                        <th>Days Present:</th>
+                        <td data-label="Days Present:">{{ attendance.days_present }}</td>
+                    </tr>
+                    <tr>
+                        <th>Gross Pay:</th>
+                        <td data-label="Gross Pay:">{{ gross_pay }}</td>
+                    </tr>
+                    <tr>
+                        <th>Income Tax (%):</th>
+                        <td data-label="Income Tax (%):">{{ selected_emp.it_percent }}</td>
+                    </tr>
+                    <tr>
+                        <th>Net Pay:</th>
+                        <td data-label="Net Pay:">{{ net_pay }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% elif error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
